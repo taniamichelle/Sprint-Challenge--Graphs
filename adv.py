@@ -24,153 +24,60 @@ world.load_graph(room_graph)
 # Print an ASCII map
 world.print_rooms()
 
-# Functions to Traverse or Search
-def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
-        # Create stack 
-        stack = Stack()  
-        # Put the starting point in it
-        stack.push(starting_vertex)
-        # Make a set to keep track of where we've been
-        visited = set()
-        # While there is stuff in stack
-        while stack.size() > 0:
-            # Pop first item
-            vertex = stack.pop()
-            # If not visited
-            if vertex not in visited:
-                # DO THE THING! (e.g. stop searching)
-                print(vertex)
-                # Add to visited
-                visited.add(vertex)
-                # Get neighbors for each edge in item
-                for next_vert in self.get_neighbors(vertex):
-                    # Add edge to stack
-                    stack.push(next_vert)
-
-def dft_recursive(self, starting_vertex, visited=None):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-
-        This should be done using recursion.
-        """
-        if visited is None:
-            visited = set()
-        visited.add(starting_vertex)
-        print(starting_vertex)
-        for child_vert in self.vertices[starting_vertex]:
-            if child_vert not in visited:
-                self.dft_recursive(child_vert, visited)
 player = Player(world.starting_room)
 
-def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        # Create empty stack 
-        stack = Stack()  # Stack imported above
-        # Add starting point as first path in stack 
-        stack.push([starting_vertex])
-        # Create set to store visited vertices
-        visited = set()
-        # stack is not empty
-        while stack.size() > 0:
-            # Remove path at top of stack
-            path = stack.pop()  
-            # Grab last vertex from path
-            vertex = path[-1]  
-            # If vertex has not been visited...
-            if vertex not in visited:
-                # Check if it's the target...
-                # If so, return path
-                if vertex == destination_vertex:
-                    return path  # Return path we've built so far
-                # Mark it as visited
-                visited.add(vertex)
-                # Get neighbors for each edge in item
-                # by adding a path to neighbors to top of stack
-                for next_vert in self.get_neighbors(vertex):
-                    # Copy path to avoid 'pass by reference' bug
-                    new_path = list(path)  # Makes copy rather than reference
-                    new_path.append(next_vert)  # Add new vertex to copy
-                    stack.push(new_path) 
+# TRAVERSAL OVERVIEW:
+    # Create a stack to hold paths
+    # Add starting_room path to stack
+    # Create empty dictionary to keep track of explored rooms
+    # While there are paths in stack...
+        # Remove last path from top of stack
+        # Get last room id
+        # If room unexplored...
+            # Check for exits...
+            # If exit = '?',
+                # Return path
+                # Mark path as explored
+            # Get neighboring rooms iteratively...
+                # Copy path 
+                # Append next room to copy
+                # Add new path to top of stack
+def traversal(rooms, starting_room):
+    # Build traversal graph
+    map_tree = Graph()
+    for room in rooms:
+        # Add rooms 
+        map_tree.add_room(room[0])
+        map_tree.add_room(room[1])
+        # Add bidirectional neighbors
+        map_tree.add_neighbor(room[0], room[1])
+        map_tree.add_neighbor(room[1], room[0])
 
-def dfs_recursive(self, starting_vertex, target_value, visited=None, path=None):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-
-        This should be done using recursion.
-        """
-        
-        if visited is None:
-            # Initialize visited set
-            visited = set()
-        if path is None:
-            # Initialize path as array b/c needs to be ordered
-            path = []
-        # Add starting_vertex to path
-        visited.add(starting_vertex)
-        # Add starting_vertex to path
-        path = path + [starting_vertex]  
-        # If at target, return path
-        if starting_vertex == target_value:
-            return path
-        # Otherwise, call DFS_recursive on each neighbor
-        for neighbor in self.get_neighbors(starting_vertex):
-            if neighbor not in visited:
-                new_path = self.dfs_recursive(neighbor, target_value, visited, path)
-                if new_path:  # Catch if target does not exist
-                    return new_path
-        return None
-
-def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
-        # Create queue
-        queue = Queue()
-        # Put the starting point in it
-        queue.enqueue(starting_vertex)
-        # Make a set to store vertices we've visited
-        visited = set()
-        # While q is not empty
-        while queue.size() > 0:
-            # dequeue first path
-            vertex = queue.dequeue()
-            # ALTERNATE for queue ONLY: check first
-            # queue[0]  
-            # If not visited
-            if vertex not in visited:
-                # Do the thing! (e.g. stop searching)
-                print(vertex)
-                # # ALTERNATE for queue ONLY: print(queue[0])
-                # Add to visited
-                visited.add(vertex)
-                # ALTERNATE for queue ONLY: visited.add(queue[0])
-                # For each edge in item
-                # Add each item to back of queue
-                for next_vert in self.get_neighbors(vertex):
-                    ## ALTERNATE for queue ONLY: for next_vert in self.get_neighbors(queue[0])
-                    # Add edge to q
-                    queue.enqueue(next_vert)
-                    # ALTERNATE for queue ONLY: queue.dequeue  # Get rid of it here
-        
-
-
+    # DFT
+    # Create stack 
+    stack = Stack()  
+    # Put the starting room in stack
+    stack.push(starting_room)
+    # Create set to mark explored rooms
+    visited_rooms = set()
+    # While stack is not empty
+    while stack.size() > 0:
+        # remove room from top of stack
+        current_room = stack.pop()
+        # If not visited_rooms
+        if current_room not in visited_rooms:
+            # DO THE THING! (e.g. stop searching)
+            print(current_room)
+            # Add to visited_rooms
+            visited_rooms.add(current_room)
+            # Get neighbors 
+            for next_room in map_tree.get_neighbors(current_room):
+                # Add room to stack
+                stack.push(next_room)
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
-
 
 
 # TRAVERSAL TEST
