@@ -62,80 +62,80 @@ class Graph:
         """
         return self.rooms[room_id]
     
-    def get_all_paths(self, room_id):
-        """
-        Takes a user's user_id as an argument
+    # def get_all_paths(self, room_id):
+    #     """
+    #     Takes a user's user_id as an argument
 
-        Returns a dictionary containing every room connected to that
-        room with the shortest path between them.
+    #     Returns a dictionary containing every room connected to that
+    #     room with the shortest path between them.
 
-        The key is the neighbor's ID and the value is the path.
-        """
-        explored = {}
-        q = Queue()
-        q.enqueue([room_id])
+    #     The key is the neighbor's ID and the value is the path.
+    #     """
+    #     traversal_path = []
+    #     q = Queue()
+    #     q.enqueue([room_id])
 
-        # BFS
-        while q.size() > 0:
-            path = q.dequeue()
-            neighbor = path[-1]
-            print("get_all_paths PATH", path, "neighbor", neighbor)
+    #     # BFS
+    #     while q.size() > 0:
+    #         path = q.dequeue()
+    #         neighbor = path[-1]
+    #         print("get_all_paths PATH", path, "neighbor", neighbor)
 
-            if neighbor not in explored:
-                explored[neighbor] = path
-                print("VISITED", visited)
+    #         if neighbor not in traversal_path:
+    #             traversal_path[neighbor] = path
+    #             print("VISITED", visited)
 
-            for neighbor in self.neighbors[neighbor]:
-                path_copy = path.copy()
-                path_copy.append(neighbor)
-                print("PATH COPY", path_copy)
-                q.enqueue(path_copy)
+    #         for neighbor in self.neighbors[neighbor]:
+    #             path_copy = path.copy()
+    #             path_copy.append(neighbor)
+    #             print("PATH COPY", path_copy)
+    #             q.enqueue(path_copy)
 
-        return explored
+    #     return traversal_path
 
-    def dft(self, starting_room):
-    """
-    Print each room in depth-first order
-    beginning from starting_room.
-    """
+    # def dft(self, starting_room):
+    # """
+    # Print each room in depth-first order
+    # beginning from starting_room.
+    # """
     
-    # Create stack 
-    stack = Stack()  
-    # Put the starting room in stack
-    stack.push(starting_room)
-    # Create set to mark explored exits
-    visited_rooms = set()
-    # While stack is not empty
-    while stack.size() > 0:
-        # remove room from top of stack
-        current_room = stack.pop()
-        # If not visited_rooms
-        if curr_room not in visited_rooms:
-            # DO THE THING! (e.g. stop searching)
-            print(curr_room)
-            # Add to visited_rooms
-            visited_rooms.add(curr_room)
-            # Get neighbors for each exit
-            for next_exit in self.get_neighbors(curr_room):
-                # Add edge to stack
-                stack.push(next_exit)
+    # # Create stack 
+    # stack = Stack()  
+    # # Put the starting room in stack
+    # stack.push(starting_room)
+    # # Create set to mark explored exits
+    # visited_rooms = set()
+    # # While stack is not empty
+    # while stack.size() > 0:
+    #     # remove room from top of stack
+    #     current_room = stack.pop()
+    #     # If not visited_rooms
+    #     if curr_room not in visited_rooms:
+    #         # DO THE THING! (e.g. stop searching)
+    #         print(curr_room)
+    #         # Add to visited_rooms
+    #         visited_rooms.add(curr_room)
+    #         # Get neighbors for each exit
+    #         for next_exit in self.get_neighbors(curr_room):
+    #             # Add edge to stack
+    #             stack.push(next_exit)
 
-    def dft_recursive(self, starting_room, visited_rooms=None):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_room.
+    # def dft_recursive(self, starting_room, visited_rooms=None):
+    #     """
+    #     Print each vertex in depth-first order
+    #     beginning from starting_room.
 
-        This should be done using recursion.
-        """
-        if visited_rooms is None:
-            visited_rooms = set()
-        visited_rooms.add(starting_room)
-        print(starting_room)
-        for child_vert in self.vertices[starting_room]:
-            if child_vert not in visited_rooms:
-                self.dft_recursive(child_vert, visited_rooms)
+    #     This should be done using recursion.
+    #     """
+    #     if visited_rooms is None:
+    #         visited_rooms = set()
+    #     visited_rooms.add(starting_room)
+    #     print(starting_room)
+    #     for child_vert in self.vertices[starting_room]:
+    #         if child_vert not in visited_rooms:
+    #             self.dft_recursive(child_vert, visited_rooms)
 
-    def dfs_recursive(self, starting_room, target_value, visited_rooms=None, path=None):
+    # def dfs_recursive(self, starting_room, target_value, visited_rooms=None, path=None):
         """
         Return a list containing a path from
         starting_room to destination_vertex in
