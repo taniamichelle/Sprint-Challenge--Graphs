@@ -1,7 +1,7 @@
 from room import Room
 from player import Player
 from world import World
-from util import Stack, Queue
+from util import Stack, Queue, Graph
 
 import random
 from ast import literal_eval
@@ -164,40 +164,7 @@ def bft(self, starting_vertex):
                     queue.enqueue(next_vert)
                     # ALTERNATE for queue ONLY: queue.dequeue  # Get rid of it here
         
-def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        # Create empty queue
-        queue = Queue()
-        # enqueue a path to starting vertex id
-        queue.enqueue([starting_vertex])
-        # Create a set to store visited vertices
-        visited = set()
-        # While q is not empty
-        while queue.size() > 0:
-            # Dequeue first path
-            path = queue.dequeue()
-            # Grab last vertex from the path
-            vertex = path[-1]
-            # If that vertex has not been visited
-            if vertex not in visited:
-                # Check if it's the target...
-                # If it is, return the path
-                if vertex == destination_vertex:
-                    return path
-                # Mark it as visited
-                visited.add(vertex)
-                # For each edge in item...
-                # Add a path to its neighbors to the back of queue
-                for next_vert in self.get_neighbors(vertex):
-                    # Copy path
-                    new_path = list(path)
-                    # append neighbor to the back of queue
-                    new_path.append(next_vert)
-                    queue.enqueue(new_path)
+
 
 
 # Fill this out with directions to walk
