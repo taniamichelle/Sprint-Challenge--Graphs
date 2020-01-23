@@ -199,6 +199,7 @@ def bfs(self, starting_vertex, destination_vertex):
                     new_path.append(next_vert)
                     queue.enqueue(new_path)
 
+
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
