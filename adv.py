@@ -54,29 +54,34 @@ def traversal(starting_room=None):
     explored_rooms = {}
     # Add starting_room
     room_id = player.current_room.id 
-    explored_rooms[room_id] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+    explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+    print("ROOM ID", room_id, "explored", explored_rooms)
     # While there are paths in stack...
+    # print("Stack size1", stack.size())
     while stack.size() > 0:
+        print("Stack size", stack.size())
         # Remove top item from stack
         current_room = stack.pop()
+        print("CURRENT", current_room, "explored", explored_rooms)
         # Check if visited
         # If room not explored...
         if current_room not in explored_rooms:
-            print(current_room)
+            print("CURR", current_room, "explored", explored_rooms)
             exits = player.current_room.get_exits()
             # Iterate through list of exits 
             for i in range(len(exits) + 1):
                 # Add current_room to map (explored_rooms)
                 explored_rooms[room_id] = {exits[i]: '?'}
+            print("CURR1", current_room, "explored1", explored_rooms)
             for neighbor in exits:
                 # print("Current exits: ", player.current_room.get_exits())
                 stack.push(neighbor)
                 # Choose unexplored exit at random
                 chosen_direction = random_direction()
                 # Get next room in chosen_direction
-                next_room = player.current_room.get_room_in_direction(chosen_direction)
+                neighbor = player.current_room.get_room_in_direction(chosen_direction)
                 # Update exits
-                explored_rooms[room_id] = {chosen_direction: next_room}
+                explored_rooms[room_id] = {chosen_direction: neighbor}
                 print('Chosen direction', chosen_direction)  
                 # Travel through exit
                 player.travel(chosen_direction)
