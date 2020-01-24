@@ -11,10 +11,10 @@ world = World()
 
 # Map Options:
 # You may uncomment the smaller graphs for dev and testing purposes.
-# map_file = "maps/test_line.txt"
+map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
+# map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
@@ -78,38 +78,7 @@ def traversal(rooms, starting_room):
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
-# traversal_path = []
-
-def get_all_paths(self, room_id):
-        """
-        Takes a user's user_id as an argument
-
-        Returns a dictionary containing every room connected to that
-        room with the shortest path between them.
-
-        The key is the neighbor's ID and the value is the path.
-        """
-        traversal_path = []
-        q = Queue()
-        q.enqueue([room_id])
-
-        # BFS
-        while q.size() > 0:
-            path = q.dequeue()
-            neighbor = path[-1]
-            print("get_all_paths PATH", path, "neighbor", neighbor)
-
-            if neighbor not in traversal_path:
-                traversal_path[neighbor] = path
-                print("VISITED", visited)
-
-            for neighbor in self.neighbors[neighbor]:
-                path_copy = path.copy()
-                path_copy.append(neighbor)
-                print("PATH COPY", path_copy)
-                q.enqueue(path_copy)
-
-        return traversal_path
+traversal_path = []
 
 # TRAVERSAL TEST
 visited_rooms = set()

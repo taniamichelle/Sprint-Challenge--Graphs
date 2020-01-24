@@ -1,5 +1,5 @@
-player import Player 
-room import Room
+from player import Player 
+from room import Room
 
 class Queue():
     def __init__(self):
@@ -62,36 +62,72 @@ class Graph:
         """
         return self.rooms[room_id]
     
-    # def get_all_paths(self, room_id):
-    #     """
-    #     Takes a user's user_id as an argument
+    def traversal(self, rooms, starting_room):
+        # Build traversal graph
+        map_tree = Graph()
+        for room in rooms:
+            # Add rooms 
+            map_tree.add_room(room[0])
+            map_tree.add_room(room[1])
+            # Add bidirectional neighbors
+            map_tree.add_neighbor(room[0], room[1])
+            map_tree.add_neighbor(room[1], room[0])
 
-    #     Returns a dictionary containing every room connected to that
-    #     room with the shortest path between them.
+            # DFT
+            # Create stack 
+            stack = Stack()  
+            # Put the starting room in stack
+            stack.push(starting_room)
+            # Create dictionary to mark explored rooms
+            # key = player.current_room.id, 
+            # value = {player.current_room.get_exits():player.travel(direction)} 
+            visited_rooms = {} 
+            # While stack is not empty
+            while stack.size() > 0:
+                # remove room from top of stack
+                current_room = stack.pop()
+                # If not visited_rooms
+                if current_room not in visited_rooms:
+                    # DO THE THING! (e.g. stop searching)
+                    print(current_room)
+                    # Add to visited_rooms
+                    visited_rooms[current_room] = path
+                    # Get neighbors 
+                    for next_room in map_tree.get_neighbors(current_room):
+                        # Add room to stack
+                        stack.push(next_room)
+            return map_tree.get_all_paths()
+        
+    def get_all_paths(self, room_id):
+        """
+        Takes a user's user_id as an argument
 
-    #     The key is the neighbor's ID and the value is the path.
-    #     """
-    #     traversal_path = []
-    #     q = Queue()
-    #     q.enqueue([room_id])
+        Returns a dictionary containing every room connected to that
+        room with the shortest path between them.
 
-    #     # BFS
-    #     while q.size() > 0:
-    #         path = q.dequeue()
-    #         neighbor = path[-1]
-    #         print("get_all_paths PATH", path, "neighbor", neighbor)
+        The key is the neighbor's ID and the value is the path.
+        """
+        traversal_path = []
+        q = Queue()
+        q.enqueue([room_id])
 
-    #         if neighbor not in traversal_path:
-    #             traversal_path[neighbor] = path
-    #             print("VISITED", visited)
+        # BFS
+        while q.size() > 0:
+            path = q.dequeue()
+            neighbor = path[-1]
+            print("get_all_paths PATH", path, "neighbor", neighbor)
 
-    #         for neighbor in self.neighbors[neighbor]:
-    #             path_copy = path.copy()
-    #             path_copy.append(neighbor)
-    #             print("PATH COPY", path_copy)
-    #             q.enqueue(path_copy)
+            if neighbor not in traversal_path:
+                traversal_path[neighbor] = path
+                print("VISITED", visited)
 
-    #     return traversal_path
+            for neighbor in self.neighbors[neighbor]:
+                path_copy = path.copy()
+                path_copy.append(neighbor)
+                print("PATH COPY", path_copy)
+                q.enqueue(path_copy)
+
+        return traversal_path
 
     # def dft(self, starting_room):
     # """
