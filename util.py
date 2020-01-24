@@ -43,16 +43,15 @@ class Graph:
         Add a room to the graph.
         """
         self.rooms[room_id] = set()
-
+    
     def random_direction(self, direction):
-        # Create empty array to hold explored exits
-        explored_exits = []
+        direction = []
         # Iterate through exits
-        for i in player.current_room.get_exits():
-            if i == '?':
-                print("i EXITS: ", i)
-                # Add explored exit to 
-                explored_exits.add(i)
+        exits = player.current_room.get_exits()
+        for i in exits:
+            direction.append(i)
+        
+        random.shuffle(direction)
 
     # def bfs(self, starting_room, target_exit):
         """

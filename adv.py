@@ -28,10 +28,11 @@ player = Player(world.starting_room)
 
 print("ROOM Exits", player.current_room.get_exits())
 print("get dir", player.current_room.get_exits())
-print("get coords", player.current_room.get_coords())
-print("connect rooms", player.current_room.connect_rooms())
+# print("get coords", player.current_room.get_coords())
+# print("connect rooms", player.current_room.connect_rooms())
 
 # TRAVERSAL OVERVIEW:
+# def traversal(self, rooms, starting_room):
     # Start in starting_room
     # player.current_room.get_exits()
     # Create a stack to hold explored rooms
@@ -61,16 +62,16 @@ print("connect rooms", player.current_room.connect_rooms())
                     # Add direction to traversal_path
                     # traversal_path.append('direction')
 
-def traversal(self, rooms, starting_room):
+
     # Build traversal graph
-    map_tree = Graph()
-    for room in rooms:
-        # Add rooms 
-        map_tree.add_room(room[0])
-        map_tree.add_room(room[1])
-        # Add bidirectional neighbors
-        map_tree.add_neighbor(room[0], room[1])
-        map_tree.add_neighbor(room[1], room[0])
+    # map_tree = Graph()
+    # for room in rooms:
+    #     # Add rooms 
+    #     map_tree.add_room(room[0])
+    #     map_tree.add_room(room[1])
+    #     # Add bidirectional neighbors
+    #     map_tree.add_neighbor(room[0], room[1])
+    #     map_tree.add_neighbor(room[1], room[0])
 
 
         
