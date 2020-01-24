@@ -29,20 +29,6 @@ class Room:
             exits.append("e")
         return exits
 
-    # def get_unexplored_exits(self):
-    #     unexplored_exits = []
-    #     value = '?'
-    #     if self.n_to is not None:
-    #         unexplored_exits.append("n")
-    #     if self.s_to is not None:
-    #         unexplored_exits.append("s")
-    #     if self.w_to is not None:
-    #         unexplored_exits.append("w")
-    #     if self.e_to is not None:
-    #         unexplored_exits.append("e")
-    #     unexplored_exits = list(map(lambda i: (i, value), unexplored_exits)) 
-    #     return unexplored_exits
-
     def get_exits_string(self):
         return f"Exits: [{', '.join(self.get_exits())}]"
 

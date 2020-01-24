@@ -34,9 +34,10 @@ class Graph:
     Represent a graph as a dictionary of rooms 
     mapping exits to edges.
     """
-    def __init__(self):
+    def __init__(self, starting_room):
         self.last_id = None
         self.rooms = {}
+        self.current_room = starting_room
 
     def add_room(self, room_id):
         """
@@ -44,14 +45,54 @@ class Graph:
         """
         self.rooms[room_id] = set()
     
-    def random_direction(self, direction):
+    # DIRECTION PICKER
+    def random_direction(self):
+        # Create empty list
         direction = []
         # Iterate through exits
         exits = player.current_room.get_exits()
         for i in exits:
             direction.append(i)
-        
+        # Shuffle list
         random.shuffle(direction)
+        return direction[0]
+
+    # TRAVERSAL OVERVIEW:
+    def traversal(self, starting_room):
+        traversal_path = []
+        print("Current exits: ", player.current_room.get_exits())
+        # Create a stack to hold explored rooms
+        stack = Stack()
+        # Add starting_room to stack
+        stack.push(starting_room)
+        # Create empty dictionary to keep track of explored rooms...
+        # {key: room_id, value: {exit: connecting_room}}
+        explored_rooms = {}
+        # While there are paths in stack...
+        while stack.size() > 0:
+            # Remove top item from stack
+            current_room = stack.pop()
+            # Check if visited
+            # If room not explored...
+            if current_room not in explored_rooms:
+                print(current_room)
+                # Mark room as explored
+                room_id = player.current_room.id
+                explored_rooms[room_id] = {'exit': ''}
+                # Add current_room to map
+                self.add_room(room.id)
+                for connecting_room in player.current_room.get_exits(connecting_room):
+                    stack.push(connecting_room)
+                    # Choose unexplored exit at random
+                    direction = player.current_room.random_direction()
+                    print(direction)
+                    # Travel through exit
+                    player.travel(direction)
+                    # Add direction to traversal_path
+                    traversal_path.append(direction)
+                    # Connect rooms
+                    player.current_room.connect_rooms(direction, current_room)
+        return explored_rooms
 
     # def bfs(self, starting_room, target_exit):
         """
