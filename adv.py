@@ -31,11 +31,11 @@ player = Player(world.starting_room)
 traversal_path = []
 
 # DIRECTION PICKER
-def random_direction(self):
+def random_direction():
     # Create empty list
     direction = []
     # Iterate through exits
-    exits = self.current_room.get_exits()
+    exits = player.current_room.get_exits()
     for i in exits:
         direction.append(i)
     # Shuffle list
@@ -43,14 +43,18 @@ def random_direction(self):
     return direction[0]
 
 # TRAVERSAL OVERVIEW:
-def traversal(self, starting_room):
+def traversal(starting_room=None):
     # Create a stack to hold explored rooms
     stack = Stack()
+    starting_room = player.current_room.id
     # Add starting_room to stack
     stack.push(starting_room)
     # Create empty dictionary to keep track of explored rooms...
-    # {key: room_id, value: {exit: connecting_room}}
+    # {key: room_id, value: {exit: connecting_room_id}}
     explored_rooms = {}
+    # Add starting_room
+    room_id = player.current_room.id 
+    explored_rooms[room_id] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
     # While there are paths in stack...
     while stack.size() > 0:
         # Remove top item from stack
@@ -59,22 +63,28 @@ def traversal(self, starting_room):
         # If room not explored...
         if current_room not in explored_rooms:
             print(current_room)
-            # Mark room as explored
-            room_id = player.current_room.id
-            for connecting_room in player.current_room.get_exits(current_room):
-                print("Current exits: ", player.current_room.get_exits())
-                stack.push(connecting_room)
+            exits = player.current_room.get_exits()
+            # Iterate through list of exits 
+            for i in range(len(exits) + 1):
+                # Add current_room to map (explored_rooms)
+                explored_rooms[room_id] = {exits[i]: '?'}
+            for neighbor in exits:
+                # print("Current exits: ", player.current_room.get_exits())
+                stack.push(neighbor)
                 # Choose unexplored exit at random
-                direction = player.current_room.random_direction()
-                print(direction)
-                # Add current_room to map
-                explored_rooms[room_id] = {direction: '?'}
+                chosen_direction = random_direction()
+                # Get next room in chosen_direction
+                next_room = player.current_room.get_room_in_direction(chosen_direction)
+                # Update exits
+                explored_rooms[room_id] = {chosen_direction: next_room}
+                print('Chosen direction', chosen_direction)  
                 # Travel through exit
-                player.travel(direction)
+                player.travel(chosen_direction)
                 # Add direction to traversal_path
-                traversal_path.append(direction)
+                traversal_path.append(chosen_direction)
+                print('curr room', current_room)
                 # Connect rooms
-                player.current_room.connect_rooms(direction, current_room)
+                # player.current_room.connect_rooms(chosen_direction, current_room)
     return explored_rooms
 
 # def bfs(self, starting_room, target_exit):
@@ -120,6 +130,8 @@ def traversal(self, starting_room):
 # print("get dir", player.current_room.get_exits())
 # print("get coords", player.current_room.get_coords())
 # print("connect rooms", player.current_room.connect_rooms())
+
+print("traversal", traversal())
 
 # TRAVERSAL TEST
 visited_rooms = set()
