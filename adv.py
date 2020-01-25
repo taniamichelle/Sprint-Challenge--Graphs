@@ -46,8 +46,8 @@ def random_direction():
 def traversal(starting_room=None):
     room_id = player.current_room.id 
     # Create map_graph
-    map_graph = Graph(starting_room)
-    map_graph.add_room()
+    # map_graph = Graph(starting_room)
+    # map_graph.add_room()
     # Create a stack to hold explored rooms
     stack = Stack()
     starting_room = player.current_room.id
@@ -57,7 +57,7 @@ def traversal(starting_room=None):
     # {key: room_id, value: {exit: connecting_room_id}}
     explored_rooms = {}
     # Add starting_room
-    explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+    # explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
     # print("ROOM ID", room_id, "explored", explored_rooms)
     # While there are paths in stack...
     # print("Stack size1", stack.size())
@@ -74,7 +74,7 @@ def traversal(starting_room=None):
             print("CURRENT 2: ", room_id, "EXPLORED 2: ", explored_rooms)
             exits = player.current_room.get_exits()
             # Iterate through list of exits 
-            for i in range(len(exits) + 1):
+            for i in exits:
                 # Add current_room to map (explored_rooms)
                 explored_rooms[room_id] = {exits[i]: '?'}
             print("CURRENT 3: ", room_id, "EXPLORED 3: ", explored_rooms)
