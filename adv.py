@@ -57,12 +57,13 @@ def traversal(starting_room=None):
     # print("ROOM ID", room_id, "explored", explored_rooms)
     # While there are paths in stack...
     # print("Stack size1", stack.size())
+    room_id = player.current_room.id 
+    print("CURRENT: ", room_id, "EXPLORED: ", explored_rooms)
     while stack.size() > 0:
-        room_id = player.current_room.id 
         print("Stack size", stack.size())
         # Remove top item from stack
         room_id = stack.pop()
-        print("CURRENT: ", room_id, "EXPLORED: ", explored_rooms)
+        print("CURRENT 1: ", room_id, "EXPLORED 1: ", explored_rooms)
         # Check if visited
         # If room not explored...
         if room_id not in explored_rooms:
