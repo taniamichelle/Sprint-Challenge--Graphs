@@ -44,6 +44,8 @@ def random_direction():
 
 # TRAVERSAL OVERVIEW:
 def traversal(starting_room=None):
+    # Create map_graph
+    map_graph = Graph(starting_room)
     # Create a stack to hold explored rooms
     stack = Stack()
     starting_room = player.current_room.id
