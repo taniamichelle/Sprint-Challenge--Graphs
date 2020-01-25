@@ -13,8 +13,8 @@ world = World()
 # You may uncomment the smaller graphs for dev and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-# map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
+map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
@@ -55,24 +55,24 @@ def traversal(starting_room=None):
     # Add starting_room
     room_id = player.current_room.id 
     explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
-    print("ROOM ID", room_id, "explored", explored_rooms)
+    # print("ROOM ID", room_id, "explored", explored_rooms)
     # While there are paths in stack...
     # print("Stack size1", stack.size())
     while stack.size() > 0:
         print("Stack size", stack.size())
         # Remove top item from stack
         current_room = stack.pop()
-        print("CURRENT", current_room, "explored", explored_rooms)
+        print("CURRENT: ", current_room, "EXPLORED: ", explored_rooms)
         # Check if visited
         # If room not explored...
         if current_room not in explored_rooms:
-            print("CURR", current_room, "explored", explored_rooms)
+            print("CURRENT 2: ", current_room, "EXPLORED 2: ", explored_rooms)
             exits = player.current_room.get_exits()
             # Iterate through list of exits 
             for i in range(len(exits) + 1):
                 # Add current_room to map (explored_rooms)
                 explored_rooms[room_id] = {exits[i]: '?'}
-            print("CURR1", current_room, "explored1", explored_rooms)
+            print("CURRENT 3: ", current_room, "EXPLORED 3: ", explored_rooms)
             for neighbor in exits:
                 # print("Current exits: ", player.current_room.get_exits())
                 stack.push(neighbor)
@@ -82,12 +82,12 @@ def traversal(starting_room=None):
                 neighbor = player.current_room.get_room_in_direction(chosen_direction)
                 # Update exits
                 explored_rooms[room_id] = {chosen_direction: neighbor}
-                print('Chosen direction', chosen_direction)  
+                print('CHOSEN DIR: ', chosen_direction)  
                 # Travel through exit
                 player.travel(chosen_direction)
                 # Add direction to traversal_path
                 traversal_path.append(chosen_direction)
-                print('curr room', current_room)
+                print("CURRENT 4: ", current_room)
                 # Connect rooms
                 # player.current_room.connect_rooms(chosen_direction, current_room)
     return explored_rooms
@@ -109,18 +109,18 @@ def traversal(starting_room=None):
     #     # Dequeue first path
     #     path = queue.dequeue()
     #     # Grab last exit from the path
-    #     curr_room = path[-1]
+    #     v = path[-1]
     #     # If that exit has not been visited_rooms
-    #     if curr_room not in visited_rooms:
+    #     if v not in visited_rooms:
     #         # Check if exit = '?'...
     #         # If it is, return the path
-    #         if curr_room == '?':
+    #         if v == '?':
     #             return path
     #         # Mark it as visited_rooms
-    #         visited_rooms.add(curr_room)
+    #         visited_rooms.add(v)
     #         # For each edge in item...
     #         # Add a path to its neighbors to the back of queue
-    #         for next_exit in self.get_neighbors(curr_room):
+    #         for next_exit in self.get_neighbors(v):
     #             # Copy path
     #             new_path = list(path)
     #             # append neighbor to the back of queue
@@ -136,7 +136,7 @@ def traversal(starting_room=None):
 # print("get coords", player.current_room.get_coords())
 # print("connect rooms", player.current_room.connect_rooms())
 
-print("traversal", traversal())
+print("TRAVERSAL: ", traversal())
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -167,3 +167,4 @@ while True:
         break
     else:
         print("I did not understand that command.")
+
