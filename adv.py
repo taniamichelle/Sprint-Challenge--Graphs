@@ -53,26 +53,26 @@ def traversal(starting_room=None):
     # {key: room_id, value: {exit: connecting_room_id}}
     explored_rooms = {}
     # Add starting_room
-    room_id = player.current_room.id 
     explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
     # print("ROOM ID", room_id, "explored", explored_rooms)
     # While there are paths in stack...
     # print("Stack size1", stack.size())
     while stack.size() > 0:
+        room_id = player.current_room.id 
         print("Stack size", stack.size())
         # Remove top item from stack
-        current_room = stack.pop()
-        print("CURRENT: ", current_room, "EXPLORED: ", explored_rooms)
+        room_id = stack.pop()
+        print("CURRENT: ", room_id, "EXPLORED: ", explored_rooms)
         # Check if visited
         # If room not explored...
-        if current_room not in explored_rooms:
-            print("CURRENT 2: ", current_room, "EXPLORED 2: ", explored_rooms)
+        if room_id not in explored_rooms:
+            print("CURRENT 2: ", room_id, "EXPLORED 2: ", explored_rooms)
             exits = player.current_room.get_exits()
             # Iterate through list of exits 
             for i in range(len(exits) + 1):
                 # Add current_room to map (explored_rooms)
                 explored_rooms[room_id] = {exits[i]: '?'}
-            print("CURRENT 3: ", current_room, "EXPLORED 3: ", explored_rooms)
+            print("CURRENT 3: ", room_id, "EXPLORED 3: ", explored_rooms)
             for neighbor in exits:
                 # print("Current exits: ", player.current_room.get_exits())
                 stack.push(neighbor)
