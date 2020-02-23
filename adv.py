@@ -11,9 +11,9 @@ world = World()
 
 # Map Options:
 # You may uncomment the smaller graphs for dev and testing purposes.
-# map_file = "maps/test_line.txt"
+map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
 # map_file = "maps/main_maze.txt"
 
@@ -31,16 +31,17 @@ player = Player(world.starting_room)
 traversal_path = []
 
 # DIRECTION PICKER
-def random_direction():
+def random_direction(target_room):
     # Create empty list
-    direction = []
+    # direction = []
     # Iterate through exits
-    exits = player.current_room.get_exits()
-    for i in exits:
-        direction.append(i)
+    # print("room in random_direction: ", target_room)
+    exits = target_room.get_exits()
+    # for i in exits:
+    #     direction.append(i)
     # Shuffle list
-    random.shuffle(direction)
-    return direction[0]
+    random.shuffle(exits)
+    return exits[0]
 
 # TRAVERSAL OVERVIEW:
 def traversal(starting_room=None):
@@ -62,84 +63,40 @@ def traversal(starting_room=None):
     # While there are paths in stack...
     # print("Stack size1", stack.size())
     # room_id = player.current_room.id 
-    print("CURRENT: ", room_id, "EXPLORED: ", explored_rooms)
+    # print("before while loop: Room_id: ", room_id, " Explored_rooms: ", explored_rooms)
+    iterator = 0
     while stack.size() > 0:
-        print("Stack size", stack.size())
-        # Remove top item from stack
+        iterator += 1
         room_id = stack.pop()
-        print("CURRENT 1: ", room_id, "EXPLORED 1: ", explored_rooms)
-        # Check if visited
+        print("Iteration: ", iterator, ", Room_id: ", room_id, ", EXPLORED_rooms: ", explored_rooms)
         # If room not explored...
         if room_id not in explored_rooms:
-            print("CURRENT 2: ", room_id, "EXPLORED 2: ", explored_rooms)
             exits = player.current_room.get_exits()
-            # Iterate through list of exits 
+            # Add current_room to explored_rooms
+            explored_rooms[room_id] = dict()
             for i in exits:
-                # Add current_room to map (explored_rooms)
-                explored_rooms[room_id] = {exits[i]: '?'}
-            print("CURRENT 3: ", room_id, "EXPLORED 3: ", explored_rooms)
-            for neighbor in exits:
-                # print("Current exits: ", player.current_room.get_exits())
-                stack.push(neighbor)
-                # Choose unexplored exit at random
-                chosen_direction = random_direction()
-                # Get next room in chosen_direction
-                neighbor = player.current_room.get_room_in_direction(chosen_direction)
-                # Update exits
-                explored_rooms[room_id] = {chosen_direction: neighbor}
-                print('CHOSEN DIR: ', chosen_direction)  
-                # Travel through exit
-                player.travel(chosen_direction)
-                # Add direction to traversal_path
-                traversal_path.append(chosen_direction)
-                print("CURRENT 4: ", current_room)
-                # Connect rooms
-                # player.current_room.connect_rooms(chosen_direction, current_room)
+                explored_rooms[room_id][i] = '?'
+            # print("After adding '?' to exits: Room_id: ", room_id, ", Explored_rooms: ", explored_rooms)
+            for chosen_direction in exits:
+                chosen_neighbor = player.current_room.get_room_in_direction(chosen_direction)
+                # print("chosen_direction: ", chosen_direction, ", chosen_neighbor: ", chosen_neighbor.id)
+                if chosen_neighbor or explored_rooms[chosen_neighbor.id]:
+                    stack.push(chosen_neighbor.id)
+                    # print("stack: ", stack)
+                    # Choose unexplored exit at random
+                    # chosen_direction = random_direction(player.current_room)
+                    # print("chosen_direction: ", chosen_direction)
+                    # Get next room in chosen_direction
+                    # chosen_direction = player.current_room.get_room_in_direction(chosen_direction)
+                    # Update exits
+                    explored_rooms[room_id][chosen_direction] = chosen_neighbor.id
+                    # Travel through exit
+                    player.travel(chosen_direction)
+                    # Add direction to traversal_path
+                    traversal_path.append(chosen_direction)
+                    # print("CURRENT 4: ", player.current_room)
+                    break
     return explored_rooms
-
-# def bfs(self, starting_room, target_exit):
-    # """
-    # Return a list containing the shortest path from
-    # starting_room to last unexplored room you passed in
-    # breath-first order.
-    # """
-    # # Create empty queue
-    # queue = Queue()
-    # # enqueue a path to starting vertex id
-    # queue.enqueue([starting_room])
-    # # Create a set to store visited_rooms exits
-    # visited_rooms = set()
-    # # While q is not empty
-    # while queue.size() > 0:
-    #     # Dequeue first path
-    #     path = queue.dequeue()
-    #     # Grab last exit from the path
-    #     v = path[-1]
-    #     # If that exit has not been visited_rooms
-    #     if v not in visited_rooms:
-    #         # Check if exit = '?'...
-    #         # If it is, return the path
-    #         if v == '?':
-    #             return path
-    #         # Mark it as visited_rooms
-    #         visited_rooms.add(v)
-    #         # For each edge in item...
-    #         # Add a path to its neighbors to the back of queue
-    #         for next_exit in self.get_neighbors(v):
-    #             # Copy path
-    #             new_path = list(path)
-    #             # append neighbor to the back of queue
-    #             new_path.append(next_exit)
-    #             queue.enqueue(new_path)
-    # # Returns path as a list of room IDs
-    # return visited_rooms  
-    # # Convert visited_rooms to a list of n/s/e/w directions before 
-    # # you can add it to your traversal path.
-
-# print("ROOM Exits", player.current_room.get_exits())
-# print("get dir", player.current_room.get_exits())
-# print("get coords", player.current_room.get_coords())
-# print("connect rooms", player.current_room.connect_rooms())
 
 print("TRAVERSAL: ", traversal())
 
@@ -164,12 +121,12 @@ else:
 # CODE TO WALK AROUND
 #######
 player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
 
