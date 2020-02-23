@@ -30,6 +30,8 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+dir_conversion = {'n':'s','e':'w','s':'n','w':'e'}
+
 # DIRECTION PICKER
 def random_direction(target_room):
     # Create empty list
@@ -57,30 +59,26 @@ def traversal(starting_room=None):
     # Create empty dictionary to keep track of explored rooms...
     # {key: room_id, value: {exit: connecting_room_id}}
     explored_rooms = {}
-    # Add starting_room
-    # explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
     # print("ROOM ID", room_id, "explored", explored_rooms)
-    # While there are paths in stack...
-    # print("Stack size1", stack.size())
-    # room_id = player.current_room.id 
     # print("before while loop: Room_id: ", room_id, " Explored_rooms: ", explored_rooms)
     iterator = 0
-    while stack.size() > 0:
+    while stack.size() <= len(world.rooms):
         iterator += 1
-        room_id = stack.pop()
+        # room_id = stack.pop()
+        room_id = player.current_room.id
+        stack.push(room_id)
         print("Iteration: ", iterator, ", Room_id: ", room_id, ", EXPLORED_rooms: ", explored_rooms)
         # If room not explored...
+        exits = player.current_room.get_exits()
         if room_id not in explored_rooms:
-            exits = player.current_room.get_exits()
-            # Add current_room to explored_rooms
-            explored_rooms[room_id] = dict()
-            for i in exits:
-                explored_rooms[room_id][i] = '?'
-            # print("After adding '?' to exits: Room_id: ", room_id, ", Explored_rooms: ", explored_rooms)
-            for chosen_direction in exits:
-                chosen_neighbor = player.current_room.get_room_in_direction(chosen_direction)
-                # print("chosen_direction: ", chosen_direction, ", chosen_neighbor: ", chosen_neighbor.id)
-                if chosen_neighbor or explored_rooms[chosen_neighbor.id]:
+            explored_rooms[room_id] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+        #     print("Before for loop: Room_id: ", room_id, ", Explored_rooms: ", explored_rooms)
+        for chosen_direction in exits:
+            chosen_neighbor = player.current_room.get_room_in_direction(chosen_direction)
+            print("chosen_direction: ", chosen_direction, "chosen_neighbor: ", chosen_neighbor)
+            if chosen_neighbor != "None":
+                print("chosen_neighbor is real")
+                if chosen_neighbor.id not in explored_rooms:
                     stack.push(chosen_neighbor.id)
                     # print("stack: ", stack)
                     # Choose unexplored exit at random
@@ -90,13 +88,16 @@ def traversal(starting_room=None):
                     # chosen_direction = player.current_room.get_room_in_direction(chosen_direction)
                     # Update exits
                     explored_rooms[room_id][chosen_direction] = chosen_neighbor.id
+                    explored_rooms[chosen_neighbor.id] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+                    explored_rooms[chosen_neighbor.id][dir_conversion[chosen_direction]] = room_id
                     # Travel through exit
                     player.travel(chosen_direction)
+                    print("current_room: ", player.current_room.id)
                     # Add direction to traversal_path
                     traversal_path.append(chosen_direction)
                     # print("CURRENT 4: ", player.current_room)
                     break
-    return explored_rooms
+    return traversal_path
 
 print("TRAVERSAL: ", traversal())
 
