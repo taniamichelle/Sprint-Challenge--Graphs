@@ -30,6 +30,8 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+dir_conversion = {'n':'s', 'e':'w', 's':'n', 'w':'e'}
+
 # DIRECTION PICKER
 def random_direction():
     # Create empty list
@@ -45,9 +47,6 @@ def random_direction():
 # TRAVERSAL OVERVIEW:
 def traversal(starting_room=None):
     room_id = player.current_room.id 
-    # Create map_graph
-    # map_graph = Graph(starting_room)
-    # map_graph.add_room()
     # Create a stack to hold explored rooms
     stack = Stack()
     starting_room = player.current_room.id
@@ -56,28 +55,21 @@ def traversal(starting_room=None):
     # Create empty dictionary to keep track of explored rooms...
     # {key: room_id, value: {exit: connecting_room_id}}
     explored_rooms = {}
-    # Add starting_room
-    # explored_rooms[starting_room] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
-    # print("ROOM ID", room_id, "explored", explored_rooms)
-    # While there are paths in stack...
-    # print("Stack size1", stack.size())
-    # room_id = player.current_room.id 
+
     print("CURRENT: ", room_id, "EXPLORED: ", explored_rooms)
-    while stack.size() > 0:
-        print("Stack size", stack.size())
+    while stack.size() <= len(world.rooms):
+        iterator += 1
+        room_id = player.current_room.id
+        stack.push(room_id)
+        # print("Stack size", stack.size())
         # Remove top item from stack
-        room_id = stack.pop()
-        print("CURRENT 1: ", room_id, "EXPLORED 1: ", explored_rooms)
+        # room_id = stack.pop()
+        print("ITERATION: ", iterator, "ROOM_ID: ", room_id, "EXPLORED_ROOMS: ", explored_rooms)
         # Check if visited
         # If room not explored...
         if room_id not in explored_rooms:
-            print("CURRENT 2: ", room_id, "EXPLORED 2: ", explored_rooms)
-            exits = player.current_room.get_exits()
-            # Iterate through list of exits 
-            for i in exits:
-                # Add current_room to map (explored_rooms)
-                explored_rooms[room_id] = {exits[i]: '?'}
-            print("CURRENT 3: ", room_id, "EXPLORED 3: ", explored_rooms)
+            explored_rooms[room_id] = {'n': '?', 's': '?', 'e': '?', 'w': '?'}
+            # # print("CURRENT 2: ", room_id, "EXPLORED 2: ", explored_rooms)
             for neighbor in exits:
                 # print("Current exits: ", player.current_room.get_exits())
                 stack.push(neighbor)
