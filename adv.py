@@ -124,22 +124,21 @@ def explore_maze(player):
     while True:
         # until you deadend
         while prev_room != player.current_room.id:
-            print('CURR_ROOM: ', player.current_room.id)
+            # print('CURR_ROOM: ', player.current_room.id)
             visited.add(player.current_room.id)
             
-            # get list of curr exits
+            # get exits
             exits = player.current_room.get_exits()
             
             # if room has not been visited
             if player.current_room.id not in graph:
                 # add to graph
                 graph[player.current_room.id] = dict()
-                
-                # add room exits to graph as '?'
-                for exit in exits:
-                    graph[player.current_room.id][exits] = '?'
+                # add exits to graph as '?'
+                for each_exit in exits:
+                    graph[player.current_room.id][each_exit] = '?'
 
-            # log prev_room connection to curr_room on graph
+            # reverse pointers
             if prev_room is not None:
                 graph[player.current_room.id][dir_rev[dir_arr_from]] = prev_room.id
             if prev_room is not None:
@@ -148,20 +147,20 @@ def explore_maze(player):
 
             # DFT - in unexplored direction
             for direction, room in graph[player.current_room.id].items():
-                poss_exits = []
+                possible_exits = []
                 if room == '?':
-                    poss_exits.append(direction)
+                    possible_exits.append(direction)
             
-            if len(poss_exits) > 0:
-                dir_to_travel = poss_exits.pop()
+            if len(possible_exits) > 0:
+                dir_to_travel = possible_exits.pop()
                 
                 # move pointers
                 prev_room = player.current_room
                 dir_arr_from = dir_to_travel
-                
+
                 # add travel_dir to traversal_path
                 traversal_path.append(dir_to_travel)
-                
+
                 # player travel
                 player.travel(dir_to_travel)
             
@@ -180,8 +179,7 @@ def explore_maze(player):
         
         # travel path
         for room, direction in path_to_unexpl:
-            print('CURR_ROOM 2: ', player.current_room.id)
-            
+            # print('CURR_ROOM 2: ', player.current_room.id)
             # move pointers
             prev_room = player.current_room
             dir_arr_from = direction
@@ -214,15 +212,15 @@ else:
 #######
 # CODE TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
 
 
 '''
