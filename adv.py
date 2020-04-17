@@ -1,7 +1,6 @@
 from room import Room
 from player import Player
 from world import World
-from util import Stack, Queue, Graph
 
 import random
 from ast import literal_eval
@@ -9,6 +8,33 @@ from ast import literal_eval
 
 # Load world
 world = World()
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            # line 13 is O(n)
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+    def push(self, value):
+        self.stack.append(value)
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+    def size(self):
+        return len(self.stack)
 
 # Map Options:
 # You may uncomment the smaller graphs for dev and testing purposes.
@@ -30,52 +56,6 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
-
-
-
-class Queue():
-    def __init__(self):
-        self.queue = []
-    def enqueue(self, value):
-        self.queue.append(value)
-    def dequeue(self):
-        if self.size() > 0:
-            # line 13 is O(n)
-            return self.queue.pop(0)
-        else:
-            return None
-    def size(self):
-        return len(self.queue)
-
-class Graph:
-
-    """Represent a graph as a dictionary of vertices mapping labels to edges."""
-    def __init__(self):
-        self.vertices = {}
-
-    def add_vertex(self, vertex_id):
-        """
-        Add a vertex to the graph.
-        """
-        self.vertices[vertex_id] = set()
-
-    def add_edge(self, v1, v2):
-        """
-        Add a directed edge to the graph.
-        If both exist, add a connection from v1 to v2.
-        If not, raise an error via Python exception.
-        """
-        if v1 in self.vertices and v2 in self.vertices:
-            self.vertices[v1].add(v2)
-        else:
-            raise IndexError("That vertex does not exist!")
-
-    def get_neighbors(self, vertex_id):
-        """
-        Get all neighbors (edges) of a vertex.
-        """
-        return self.vertices[vertex_id]
-
 
 
 def explore_maze(player):
@@ -109,6 +89,10 @@ def explore_maze(player):
                 for direction, room in graph[vertex].items():
                     # make copy of path
                     path_copy = path.copy()
+                    # append neighbor
+                    path_copy.append((room, direction))
+                    # enqueue path_copy
+                    q.enqueue(path_copy)
     
     # empty set for visited and graph
     visited = set()
