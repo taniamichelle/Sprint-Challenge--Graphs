@@ -5,10 +5,10 @@ class Room:
         self.id = id
         self.name = name
         self.description = description
-        self.n_to = 'None'
-        self.s_to = 'None'
-        self.e_to = 'None'
-        self.w_to = 'None'
+        self.n_to = None
+        self.s_to = None
+        self.e_to = None
+        self.w_to = None
         self.x = x
         self.y = y
     def __str__(self):

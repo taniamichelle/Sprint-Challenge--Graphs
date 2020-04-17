@@ -88,19 +88,23 @@ def explore_maze(player):
         q.enqueue([(start_vertex, None)])
         # create set to store visited vertices
         visited = set()
+        
         # while q is not empty
         while q.size() > 0:
             # dequeue first path
             path = q.dequeue()
             # grab vertex from end of the path
             vertex = path[-1][0]
+            
             # check if it's been visited
             if vertex not in visited:
                 # mark it visited
                 visited.add(vertex)
+                
                 # check if it's the target
                 if vertex == target_vertex:
                     return path
+                
                 # enqueue path to its neighbors
                 for direction, room in graph[vertex].items():
                     # make copy of path
@@ -116,17 +120,21 @@ def explore_maze(player):
 
     # direction reversal
     dir_rev = {'n': 's', 'e': 'w', 's': 'n', 'w': 'e'}
+
     while True:
-        # until you hit a deadend
+        # until you deadend
         while prev_room != player.current_room.id:
             print('CURR_ROOM: ', player.current_room.id)
             visited.add(player.current_room.id)
+            
             # get list of curr exits
             exits = player.current_room.get_exits()
+            
             # if room has not been visited
             if player.current_room.id not in graph:
                 # add to graph
                 graph[player.current_room.id] = dict()
+                
                 # add room exits to graph as '?'
                 for exit in exits:
                     graph[player.current_room.id][exits] = '?'
@@ -143,34 +151,44 @@ def explore_maze(player):
                 poss_exits = []
                 if room == '?':
                     poss_exits.append(direction)
+            
             if len(poss_exits) > 0:
                 dir_to_travel = poss_exits.pop()
+                
                 # move pointers
                 prev_room = player.current_room
                 dir_arr_from = dir_to_travel
+                
                 # add travel_dir to traversal_path
                 traversal_path.append(dir_to_travel)
+                
                 # player travel
                 player.travel(dir_to_travel)
+            
             else:
                 break
         
         # BFS - find path to nearest unexplored room
         path_to_unexpl = bfs(graph, player.current_room.id, '?')
+        
         # end loop if all rooms have been explored
         if path_to_unexpl is None:
             break
 
-        # remove start_room b/c it is current room (avoid duplicates)
+        # remove start_room b/c it is current room to avoid duplicates
         path_to_unexpl.pop(0)
+        
         # travel path
         for room, direction in path_to_unexpl:
             print('CURR_ROOM 2: ', player.current_room.id)
+            
             # move pointers
             prev_room = player.current_room
             dir_arr_from = direction
-            # traverse and add to traversal_path
+            
+            # traverse 
             player.travel(direction)
+            # add to traversal_path
             traversal_path.append(direction)
 
 # Run function
