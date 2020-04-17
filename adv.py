@@ -29,7 +29,7 @@ class Queue():
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -81,7 +81,7 @@ def explore_maze(player):
                     # enqueue path_copy
                     q.enqueue(path_copy)
     
-    # empty set for visited and graph
+    # empty set for visited and dict for graph
     visited = set()
     graph = dict()
 
