@@ -47,7 +47,7 @@ traversal_path = []
 
 def explore_maze(player):
 
-    # BFS 
+    # BFS helper function
     def bfs(graph, start_vertex, target_vertex):
         # create a queue
         q = Queue()
