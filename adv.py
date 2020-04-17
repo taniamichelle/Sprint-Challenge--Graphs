@@ -6,6 +6,7 @@ from util import Stack, Queue, Graph
 import random
 from ast import literal_eval
 
+
 # Load world
 world = World()
 
@@ -13,9 +14,9 @@ world = World()
 # You may uncomment the smaller graphs for dev and testing purposes.
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
-map_file = "maps/test_loop.txt"
+# map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -30,6 +31,184 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+
+
+class Queue():
+    def __init__(self):
+        self.queue = []
+    def enqueue(self, value):
+        self.queue.append(value)
+    def dequeue(self):
+        if self.size() > 0:
+            # line 13 is O(n)
+            return self.queue.pop(0)
+        else:
+            return None
+    def size(self):
+        return len(self.queue)
+
+class Graph:
+
+    """Represent a graph as a dictionary of vertices mapping labels to edges."""
+    def __init__(self):
+        self.vertices = {}
+
+    def add_vertex(self, vertex_id):
+        """
+        Add a vertex to the graph.
+        """
+        self.vertices[vertex_id] = set()
+
+    def add_edge(self, v1, v2):
+        """
+        Add a directed edge to the graph.
+        If both exist, add a connection from v1 to v2.
+        If not, raise an error via Python exception.
+        """
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            raise IndexError("That vertex does not exist!")
+
+    def get_neighbors(self, vertex_id):
+        """
+        Get all neighbors (edges) of a vertex.
+        """
+        return self.vertices[vertex_id]
+
+
+
+def explore_maze(player):
+
+    # BFS 
+    def bfs(graph, start_vertex, target_vertex):
+        # create a queue
+        q = Queue()
+        # enqueue path to start_vertex
+        q.enqueue([(start_vertex, None)])
+        # create set to store visited vertices
+        visited = set()
+        # while q is not empty
+        while q.size() > 0:
+            # dequeue first path
+            path = q.dequeue()
+            # grab vertex from end of the path
+            vertex = path[-1][0]
+            # check if it's been visited
+            if vertex not in visited:
+                # mark it visited
+                visited.add(vertex)
+                # check if it's the target
+                if vertex == target_vertex:
+                    return path
+                # enqueue path to its neighbors
+                for direction, room in graph[vertex].items():
+                    # make copy of path
+                    path_copy = path.copy()
+    
+    # empty set for visited and graph
+    visited = set()
+    graph = dict()
+
+    # create room pointers
+    prev_room = None
+    dir_arr_from = None
+
+    # direction reversal
+    dir_rev = {'n': 's', 'e': 'w', 's': 'n', 'w': 'e'}
+    while True:
+        # until you hit a deadend
+        while prev_room != player.current_room.id:
+            print('CURR_ROOM: ', player.current_room.id)
+            visited.add(player.current_room.id)
+            # get list of curr exits
+            exits = player.current_room.get_exits()
+            # if room has not been visited
+            if player.current_room.id not in graph:
+                # add to graph
+                graph[player.current_room.id] = dict()
+                # add room exits to graph as '?'
+                for exit in exits:
+                    graph[player.current_room.id][exits] = '?'
+
+            # log prev_room connection to curr_room on graph
+            if prev_room is not None:
+                graph[player.current_room.id][dir_rev[dir_arr_from]] = prev_room.id
+            if prev_room is not None:
+                graph[prev_room.id][dir_arr_from] = player.current_room.id
+            
+
+            # DFT - in unexplored direction
+            for direction, room in graph[player.current_room.id].items():
+                poss_exits = []
+                if room == '?':
+                    poss_exits.append(direction)
+            if len(poss_exits) > 0:
+                dir_to_travel = poss_exits.pop()
+                # move pointers
+                prev_room = player.current_room
+                dir_arr_from = dir_to_travel
+                # add travel_dir to traversal_path
+                traversal_path.append(dir_to_travel)
+                # player travel
+                player.travel(dir_to_travel)
+            else:
+                break
+        
+        # BFS - find path to nearest unexplored room
+        path_to_unexpl = bfs(graph, player.current_room.id, '?')
+        # end loop if all rooms have been explored
+        if path_to_unexpl is None:
+            break
+
+        # remove start_room b/c it is current room (avoid duplicates)
+        path_to_unexpl.pop(0)
+        # travel path
+        for room, direction in path_to_unexpl:
+            print('CURR_ROOM 2: ', player.current_room.id)
+            # move pointers
+            prev_room = player.current_room
+            dir_arr_from = direction
+            # traverse and add to traversal_path
+            player.travel(direction)
+            traversal_path.append(direction)
+
+# Run function
+explore_maze(player)        
+    
+# TRAVERSAL TEST
+visited_rooms = set()
+player.current_room = world.starting_room
+visited_rooms.add(player.current_room)
+
+for move in traversal_path:
+    player.travel(move)
+    visited_rooms.add(player.current_room)
+
+if len(visited_rooms) == len(room_graph):
+    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+else:
+    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
+    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+
+
+
+#######
+# CODE TO WALK AROUND
+#######
+player.current_room.print_room_description(player)
+while True:
+    cmds = input("-> ").lower().split(" ")
+    if cmds[0] in ["n", "s", "e", "w"]:
+        player.travel(cmds[0], True)
+    elif cmds[0] == "q":
+        break
+    else:
+        print("I did not understand that command.")
+
+
+'''
+ALTERNATE SOLUTION:
 dir_conversion = {'n':'s', 'e':'w', 's':'n', 'w':'e'}
 
 # DIRECTION PICKER
@@ -135,33 +314,4 @@ def traversal(starting_room=None):
 
 print("TRAVERSAL: ", traversal())
 
-# TRAVERSAL TEST
-visited_rooms = set()
-player.current_room = world.starting_room
-visited_rooms.add(player.current_room)
-
-for move in traversal_path:
-    player.travel(move)
-    visited_rooms.add(player.current_room)
-
-if len(visited_rooms) == len(room_graph):
-    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-else:
-    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-    print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
-
-
-#######
-# CODE TO WALK AROUND
-#######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
-
+'''
